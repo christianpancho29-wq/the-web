@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>PolyShift Cipher - Encryption Suite</title>
+        <link rel="stylesheet" href="web.css">
+    </head>
+<body>
+<div class="page active" id="page-login">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🔐</div>
+        POLYSHIFT
+      </div>
+      <div class="auth-title">Welcome <span>back</span></div>
+      <div class="auth-sub">Sign in to your account to use the cipher suite.</div>
+
+      <div class="auth-error" id="login-error"></div>
+      <div class="auth-success" id="login-success"></div>
+
+      <div class="auth-field">
+        <label>Username or Email</label>
+        <input type="text" id="login-username" placeholder="your_username" autocomplete="username"/>
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password"/>
+          <button class="pw-toggle" onclick="togglePw('login-password',this)">show</button>
+        </div>
+      </div>
+
+      <button class="auth-btn" id="login-btn" onclick="doLogin()">Sign In →</button>
+
+      <div class="auth-divider">or</div>
+      <div class="auth-switch">Don't have an account? <a onclick="showPage('page-signup')">Sign up here</a></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="page" id="page-signup">
+  <div class="auth-wrap">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <div class="auth-logo-icon">🔐</div>
+        POLYSHIFT
+      </div>
+      <div class="auth-title">Create <span>account</span></div>
+      <div class="auth-sub">Join PolyShift to start encrypting messages securely.</div>
+
+      <div class="auth-error" id="signup-error"></div>
+      <div class="auth-success" id="signup-success"></div>
+
+      <div class="auth-field">
+        <label>Full Name</label>
+        <input type="text" id="signup-fullname" placeholder="Juan dela Cruz"/>
+      </div>
+      <div class="auth-field">
+        <label>Username</label>
+        <input type="text" id="signup-username" placeholder="juan123"/>
+      </div>
+      <div class="auth-field">
+        <label>Email Address</label>
+        <input type="text" id="signup-email" placeholder="juan@email.com"/>
+      </div>
+      <div class="auth-field">
+        <label>Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="signup-password" placeholder="Min. 6 characters"/>
+          <button class="pw-toggle" onclick="togglePw('signup-password',this)">show</button>
+        </div>
+        <div class="auth-rule">At least 6 characters.</div>
+      </div>
+      <div class="auth-field">
+        <label>Confirm Password</label>
+        <div class="pw-wrap">
+          <input type="password" id="signup-confirm" placeholder="Repeat password"/>
+          <button class="pw-toggle" onclick="togglePw('signup-confirm',this)">show</button>
+        </div>
+      </div>
+
+      <button class="auth-btn" id="signup-btn" onclick="doSignup()">Create Account →</button>
+
+      <div class="auth-divider">or</div>
+      <div class="auth-switch">Already have an account? <a onclick="showPage('page-login')">Sign in here</a></div>
+    </div>
+  </div>
+</div>
+
+
+<div class="page" id="page-app">
+
+  <nav>
+    <div class="container">
+      <div class="nav-inner">
+        <div class="logo"><div class="logo-icon">🔐</div>POLYSHIFT</div>
+        <div class="nav-links">
+          <a href="#" onclick="switchTab('encrypt');return false">Encrypt</a>
+          <a href="#" onclick="switchTab('decrypt');return false">Decrypt</a>
+          <a href="#" onclick="switchTab('test');return false">Test</a>
+          <a href="#" onclick="switchTab('algo');return false">Algorithm</a>
+        </div>
+        <div class="nav-user">
+          <div class="nav-avatar" id="nav-avatar">U</div>
+          <span id="nav-username" style="font-size:.78rem">User</span>
+          <button class="btn-logout" onclick="doLogout()">Log out</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="hero">
+      <div class="hero-badge">⬡ Multi-Layer Cipher Suite</div>
+      <h1>PolyShift <span>Cipher</span></h1>
+      <p>5-layer encryption: keystream substitution, Caesar shift, rail-fence transposition, chunk reversal, and hex encoding.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-val">5</div><div class="hero-stat-lbl">Cipher layers</div></div>
+        <div class="hero-stat"><div class="hero-stat-val">94</div><div class="hero-stat-lbl">Char alphabet</div></div>
+        <div class="hero-stat"><div class="hero-stat-val">MySQL</div><div class="hero-stat-lbl">Database</div></div>
+      </div>
+    </div>
+
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('encrypt')">// Encrypt</button>
+      <button class="tab-btn" onclick="switchTab('decrypt')">// Decrypt</button>
+      <button class="tab-btn" onclick="switchTab('test')">// Test Suite</button>
+      <button class="tab-btn" onclick="switchTab('algo')">// Algorithm</button>
+    </div>
+
+    
+    <div class="tab-panel active" id="tab-encrypt">
+      <div class="grid-2">
+        <div>
+          <div class="card">
+            <div class="card-title">Input</div>
+            <div style="margin-bottom:1rem"><label>Plaintext message</label><textarea id="enc-plain" placeholder="Type your secret message here..."></textarea></div>
+            <div class="grid-2" style="margin-bottom:1rem">
+              <div><label>Passphrase key</label><input type="text" id="enc-key" value="MySecretKey42"/></div>
+              <div><label>Shift offset (0–25)</label><input type="number" id="enc-shift" value="7" min="0" max="25"/></div>
+            </div>
+            <div style="margin-bottom:1rem"><label>Label / Note</label><input type="text" id="enc-label" placeholder="e.g. My first message"/></div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="doEncrypt()">Encrypt →</button>
+              <button class="btn btn-save" onclick="saveRecord('encrypt')">Save to MySQL</button>
+              <button class="btn" onclick="clearEncrypt()">Clear</button>
+            </div>
+            <div class="save-status" id="save-enc"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-title">Ciphertext output</div>
+            <div style="position:relative">
+              <div class="output" id="enc-output"><span style="color:var(--muted);font-style:italic">Encrypted text will appear here...</span></div>
+              <button class="copy-btn" onclick="copyText('enc-output')">copy</button>
+            </div>
+            <div class="metrics" id="enc-metrics" style="display:none">
+              <div class="metric"><div class="metric-val" id="em-len">0</div><div class="metric-lbl">Length</div></div>
+              <div class="metric"><div class="metric-val" id="em-ent">0</div><div class="metric-lbl">Entropy</div></div>
+              <div class="metric"><div class="metric-val" id="em-ic">0</div><div class="metric-lbl">IC</div></div>
+            </div>
+          </div>
+          <div class="card"><div class="card-title">Transformation log</div><div class="steps-log" id="enc-steps">Run encryption to see steps...</div></div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="tab-panel" id="tab-decrypt">
+      <div class="grid-2">
+        <div>
+          <div class="card">
+            <div class="card-title">Input</div>
+            <div style="margin-bottom:1rem"><label>Ciphertext (hex)</label><textarea id="dec-cipher" placeholder="Paste ciphertext here..."></textarea></div>
+            <div class="grid-2" style="margin-bottom:1rem">
+              <div><label>Passphrase key</label><input type="text" id="dec-key" value="MySecretKey42"/></div>
+              <div><label>Shift offset (0–25)</label><input type="number" id="dec-shift" value="7" min="0" max="25"/></div>
+            </div>
+            <div style="margin-bottom:1rem"><label>Label / Note</label><input type="text" id="dec-label" placeholder="e.g. Decoded message"/></div>
+            <div class="btn-row">
+              <button class="btn btn-primary" onclick="doDecrypt()">Decrypt →</button>
+              <button class="btn btn-save" onclick="saveRecord('decrypt')">Save to MySQL</button>
+              <button class="btn" onclick="clearDecrypt()">Clear</button>
+            </div>
+            <div class="save-status" id="save-dec"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="card-title">Decrypted output</div>
+            <div style="position:relative">
+              <div class="output plain" id="dec-output"><span style="color:var(--muted);font-style:italic">Decrypted text will appear here...</span></div>
+              <button class="copy-btn" onclick="copyText('dec-output')">copy</button>
+            </div>
+          </div>
+          <div class="card"><div class="card-title">Decryption log</div><div class="steps-log" id="dec-steps">Run decryption to see steps...</div></div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="tab-panel" id="tab-test">
+      <div class="card">
+        <div class="card-title">Automated test suite</div>
+        <div class="btn-row" style="margin-bottom:1.25rem">
+          <button class="btn btn-primary" onclick="runTests()">Run all tests →</button>
+          <button class="btn" onclick="clearTests()">Clear</button>
+        </div>
+        <div id="test-summary" style="display:none;margin-bottom:1rem"></div>
+        <div id="test-list"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Observations &amp; analysis</div>
+        <div style="font-family:var(--mono);font-size:.78rem;line-height:1.9;color:var(--muted);display:flex;flex-direction:column;gap:.85rem">
+          <div><span style="color:var(--accent2)">Strength:</span> Polyalphabetic layer defeats single-letter frequency analysis.</div>
+          <div><span style="color:var(--accent2)">Strength:</span> Rail-fence transposition breaks bigram and trigram patterns.</div>
+          <div><span style="color:var(--accent2)">Strength:</span> Chunk reversal is key-length-dependent — different keys → structurally different ciphertexts.</div>
+          <div><span style="color:var(--accent2)">Strength:</span> Hex encoding ensures output is always printable ASCII.</div>
+          <div><span style="color:var(--accent3)">Limitation:</span> Key stream period = key length. Short keys weaken long-message security.</div>
+          <div><span style="color:var(--accent3)">Limitation:</span> Symmetric — same key for encrypt and decrypt. Key must be shared securely.</div>
+          <div><span style="color:var(--accent3)">Limitation:</span> Unicode chars outside the 94-char ALPHABET pass through unencrypted.</div>
+          <div><span style="color:var(--accent3)">Limitation:</span> Educational-grade only — not suitable for protecting sensitive real-world data.</div>
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="tab-panel" id="tab-algo">
+      <div class="card">
+        <div class="card-title">Algorithm documentation</div>
+        <div class="algo-section">
+          <h3>Overview</h3>
+          <p style="font-family:var(--mono);font-size:.78rem;color:var(--muted);line-height:1.8">PolyShift is a symmetric multi-layer classical cipher combining four distinct transformation techniques designed to resist simple frequency analysis and pattern recognition.</p>
+        </div>
+        <div class="algo-section" style="margin-top:1.5rem">
+          <h3>Encryption pipeline</h3>
+          <ul class="step-list">
+            <li><div class="step-num">1</div><div class="step-content"><strong>Key Stream Derivation</strong> — ks[i] = charCode(key[i mod keyLen]). Repeating numeric stream from passphrase.</div></li>
+            <li><div class="step-num">2</div><div class="step-content"><strong>Keystream Substitution</strong> — ALPHABET[(index + ks[i]) mod 94]. Polyalphabetic — same char maps differently per position.</div></li>
+            <li><div class="step-num">3</div><div class="step-content"><strong>Caesar Shift</strong> — Shifts A–Z and a–z by offset. Adds a second independent key parameter.</div></li>
+            <li><div class="step-num">4</div><div class="step-content"><strong>Rail-Fence Transposition</strong> — 3-rail zigzag write, row-by-row read. Separates adjacent characters positionally.</div></li>
+            <li><div class="step-num">5</div><div class="step-content"><strong>Chunk Reversal</strong> — Blocks of size=key.length are each reversed. Key-dependent structure.</div></li>
+            <li><div class="step-num">6</div><div class="step-content"><strong>Hex Encoding</strong> — Each char → 2-digit hex. Output is always [0-9a-f], always printable.</div></li>
+          </ul>
+        </div>
+        <div class="algo-section" style="margin-top:1.5rem">
+          <h3>Decryption (exact reverse)</h3>
+          <ul class="step-list">
+            <li><div class="step-num">1</div><div class="step-content"><strong>Hex Decode</strong></div></li>
+            <li><div class="step-num">2</div><div class="step-content"><strong>Un-Reverse Chunks</strong></div></li>
+            <li><div class="step-num">3</div><div class="step-content"><strong>Inverse Rail-Fence</strong></div></li>
+            <li><div class="step-num">4</div><div class="step-content"><strong>Reverse Caesar Shift</strong></div></li>
+            <li><div class="step-num">5</div><div class="step-content"><strong>Reverse Keystream Substitution</strong></div></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /container -->
+
+  <footer><div class="container">PolyShift Cipher Suite — MySQL + XAMPP — Educational use only</div></footer>
+</div><!-- /page-app -->
+
+<div class="notif" id="notif"></div>
+
+<script src="site.js" defer></script>
+
+
+</body>
+
+</html>
